@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aniverse - আপনার অ্যানিমে দুনিয়া</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Noto+Sans+Bengali:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* CSS Variables for easier customization */
+        :root {
+            --primary-color: #FF8C00; /* Dark Orange - for action/highlight */
+            --secondary-color: #FFA726; /* Lighter Orange */
+            --accent-color: #FFD700; /* Gold/Yellow - for interactive elements */
+            --red-button-color: #E53935; /* New: Red for Play/Watch buttons */
+            --red-button-hover: #C62828; /* New: Darker Red for hover */
+            --dark-bg: #121212; /* Darker background */
+            --mid-bg: #1f1f1f; /* Medium dark background */
+            --light-bg: #2b2b2b; /* Slightly lighter for cards */
+            --light-text: #e0e0e0;
+            --dark-text: #a0a0a0;
+            --border-color: #3a3a3a;
+
+            /* Button Sizing Variables */
+            --btn-padding-y: 12px;
+            --btn-padding-x: 30px;
+            --btn-font-size: 1.2em;
+            --btn-border-radius: 6px;
+
+            /* Small Button Sizing Variables */
+            --btn-sm-padding-y: 8px;
+            --btn-sm-padding-x: 18px;
+            --btn-sm-font-size: 0.9em;
+
+            /* Mobile Specific Button Sizing */
+            --btn-mobile-padding-y: 10px;
+            --btn-mobile-padding-x: 20px;
+            --btn-mobile-font-size: 1em;
+        }
+
+        /* Basic Reset & Typography */
+        body {
+            margin: 0;
+            font-family: 'Roboto', 'Noto Sans Bengali', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding-bottom: 80px; /* Space for fixed bottom navigation */
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--mid-bg);
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.7);
+            animation: fadeInDown 0.8s ease-out forwards;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif; /* Unique font for logo */
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-left: 30px;
+            letter-spacing: 1px;
+            transition: color 0.3s ease, transform 0.3s ease;
+            text-shadow: 0 0 10px rgba(255, 140, 0, 0.5); /* Glow effect */
+        }
+
+        .logo:hover {
+            color: var(--accent-color);
+            transform: scale(1.05);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+        }
+
+        /* Search Bar (now only in bottom nav, but keeping styles for potential re-use or modal) */
+        /* These styles are kept for a search input if it were part of a modal or dynamic search bar */
+        .search-bar-overlay { /* Used for a potential full-screen search */
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1002; /* Above bottom nav */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .search-bar-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .search-bar-overlay input {
+            width: 80%;
+            max-width: 600px;
+            padding: 15px 30px;
+            border: 2px solid var(--primary-color);
+            border-radius: 30px;
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            outline: none;
+            font-size: 1.5em;
+            box-shadow: 0 0 15px rgba(255, 140, 0, 0.5);
+            margin-bottom: 20px;
+        }
+        .search-bar-overlay input::placeholder {
+            color: var(--dark-text);
+        }
+        .search-bar-overlay input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+        }
+
+        .search-bar-overlay button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 15px 40px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(255, 140, 0, 0.3);
+        }
+
+        .search-bar-overlay button:hover {
+            background-color: #CC7000;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255, 140, 0, 0.5);
+        }
+
+        .search-bar-overlay .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--dark-text);
+            font-size: 2.5em;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .search-bar-overlay .close-btn:hover {
+            color: var(--primary-color);
+        }
+
+        /* Hero Section */
+        .hero-carousel {
+            position: relative;
+            width: 100%;
+            height: 650px; /* Slightly taller */
+            overflow: hidden;
+            background-color: #000;
+            border-bottom: 3px solid var(--primary-color); /* Stronger border */
+        }
+
+        .hero-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out; /* Slower transition */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero-item.active {
+            opacity: 1;
+        }
+
+        .hero-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            filter: brightness(0.6); /* Slightly darker image */
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.95) 100%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 80px; /* More padding */
+            color: white;
+        }
+
+        .hero-overlay h1 {
+            font-size: 5em; /* Larger title */
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 140, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0.9); /* Stronger glow */
+            color: var(--primary-color);
+            max-width: 1000px;
+            line-height: 1.1;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.9s ease-out 0.5s forwards;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .hero-overlay p {
+            font-size: 1.5em;
+            max-width: 900px;
+            margin-bottom: 50px;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
+            color: var(--light-text);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.9s ease-out 0.7s forwards;
+        }
+
+        .hero-buttons button {
+            background-color: var(--red-button-color); /* Changed to red */
+            color: white;
+            padding: var(--btn-padding-y) var(--btn-padding-x);
+            border: none;
+            border-radius: var(--btn-border-radius);
+            font-size: var(--btn-font-size);
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            margin: 0 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.9s ease-out 0.9s forwards;
+            font-weight: 700;
+            box-shadow: 0 5px 15px rgba(229, 57, 53, 0.4); /* Red shadow */
+        }
+
+        .hero-buttons button:hover {
+            background-color: var(--red-button-hover); /* Darker red on hover */
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(229, 57, 53, 0.6); /* Darker red shadow */
+        }
+
+        /* Content Sections - Horizontal Scrolling */
+        .content-section {
+            padding: 60px 0;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s ease-out, transform 1s ease-out; /* Slower animation */
+        }
+
+        .content-section.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .content-section h2 {
+            font-size: 3em; /* Larger heading */
+            color: var(--primary-color);
+            margin-bottom: 40px;
+            text-align: center;
+            padding-bottom: 15px;
+            position: relative;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(255, 140, 0, 0.4);
+        }
+
+        .content-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px; /* Thicker line */
+            background-color: var(--accent-color); /* Accent color line */
+            border-radius: 5px;
+        }
+
+        .video-carousel-wrapper {
+            position: relative;
+        }
+
+        .video-grid {
+            display: flex;
+            overflow-x: scroll;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 25px; /* More space for scrollbar */
+            gap: 25px; /* More space between cards */
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) #333;
+        }
+
+        .video-grid::-webkit-scrollbar {
+            height: 10px; /* Thicker scrollbar */
+        }
+
+        .video-grid::-webkit-scrollbar-track {
+            background: var(--light-bg);
+            border-radius: 10px;
+        }
+
+        .video-grid::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 10px;
+            border: 3px solid var(--light-bg); /* Border around thumb */
+        }
+
+        /* Anime Card Design (was video-card) */
+        .anime-card {
+            flex: 0 0 280px; /* Wider cards */
+            background-color: var(--light-bg);
+            border-radius: 15px; /* More rounded corners */
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+            transition: transform 0.4s ease, box-shadow 0.4s ease; /* Slower transition */
+            cursor: pointer;
+            position: relative;
+            transform: scale(0.98);
+            opacity: 0;
+            animation: zoomIn 0.7s ease-out forwards;
+            border: 1px solid var(--border-color);
+        }
+
+        .anime-card:hover {
+            transform: scale(1.03) translateY(-8px); /* More pronounced lift */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 140, 0, 0.4); /* Glow on hover */
+            z-index: 10;
+        }
+
+        .anime-card img {
+            width: 100%;
+            height: 400px; /* Taller images */
+            object-fit: cover;
+            display: block;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .anime-card .anime-card-info { /* Basic info always visible */
+            padding: 15px;
+            text-align: center;
+            background-color: var(--mid-bg);
+        }
+
+        .anime-card .anime-card-info h3 {
+            margin: 0;
+            font-size: 1.3em;
+            color: var(--primary-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 5px;
+        }
+
+        .anime-card .anime-card-info p {
+            font-size: 0.9em;
+            color: var(--dark-text);
+            margin: 0;
+        }
+
+        /* Hover Details Popover (now slide-up) */
+        .anime-card .hover-details {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.98) 0%, rgba(0, 0, 0, 0.8) 100%);
+            padding: 20px;
+            box-sizing: border-box;
+            transform: translateY(100%);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            color: #fff;
+            box-shadow: 0 -8px 25px rgba(0,0,0,0.7);
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%; /* Occupy full height on hover */
+        }
+
+        .anime-card:hover .hover-details {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .hover-details h4 {
+            margin: 0 0 10px 0;
+            font-size: 1.6em;
+            color: var(--primary-color);
+            text-shadow: 0 0 5px rgba(255, 140, 0, 0.5);
+        }
+        .hover-details .meta {
+            font-size: 1em;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .hover-details .meta i {
+            color: var(--accent-color); /* Star icon color - using accent color */
+        }
+        .hover-details p {
+            font-size: 1em;
+            margin-bottom: 20px;
+            max-height: 80px; /* Allow more description */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 4; /* Show up to 4 lines */
+            -webkit-box-orient: vertical;
+            color: var(--light-text);
+        }
+        .hover-details .actions button {
+            background-color: var(--red-button-color); /* Changed to red */
+            color: white;
+            border: none;
+            padding: var(--btn-sm-padding-y) var(--btn-sm-padding-x);
+            border-radius: 8px; /* Slightly more rounded */
+            cursor: pointer;
+            margin-right: 15px;
+            font-size: var(--btn-sm-font-size);
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            font-weight: 700;
+            box-shadow: 0 3px 8px rgba(229, 57, 53, 0.3); /* Red shadow */
+        }
+        .hover-details .actions button:hover {
+            background-color: var(--red-button-hover); /* Darker red on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(229, 57, 53, 0.5); /* Darker red shadow */
+        }
+
+        /* Carousel Navigation Buttons */
+        .carousel-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: var(--primary-color);
+            border: none;
+            padding: 20px 15px;
+            font-size: 3em; /* Larger arrows */
+            cursor: pointer;
+            z-index: 50;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+            display: none; /* Hidden by default for touch devices */
+            box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);
+        }
+
+        .carousel-nav-btn.left {
+            left: 0px;
+        }
+
+        .carousel-nav-btn.right {
+            right: 0px;
+        }
+
+        .video-carousel-wrapper:hover .carousel-nav-btn {
+            display: block; /* Only show on hover for PC */
+        }
+
+        .carousel-nav-btn:hover {
+            background-color: rgba(0, 0, 0, 0.95);
+            color: var(--accent-color);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--mid-bg);
+            color: var(--dark-text);
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 60px;
+            border-top: 1px solid var(--border-color);
+            font-size: 1em;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.7);
+        }
+
+        footer .social-links a {
+            color: var(--light-text);
+            font-size: 1.8em;
+            margin: 0 15px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        footer .social-links a:hover {
+            color: var(--primary-color);
+            transform: scale(1.2) translateY(-3px);
+            text-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
+        }
+
+        footer p {
+            margin-top: 20px;
+            margin-bottom: 0;
+        }
+
+        /* Bottom Navigation Bar - Mobile specific */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.98), rgba(0, 0, 0, 0.8));
+            border-top: 1px solid #333;
+            z-index: 1001;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.6);
+            animation: slideInUp 0.8s ease-out forwards;
+            backdrop-filter: blur(5px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .bottom-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            width: 100%;
+            justify-content: space-around;
+        }
+
+        .bottom-nav li {
+            flex: 1;
+            text-align: center;
+        }
+
+        .bottom-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--dark-text);
+            font-size: 0.9em;
+            padding: 10px 0;
+            transition: color 0.3s ease, transform 0.2s ease, text-shadow 0.3s ease;
+            font-weight: 600;
+        }
+
+        .bottom-nav a i {
+            font-size: 1.8em; /* Larger icons */
+            margin-bottom: 5px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .bottom-nav a:hover {
+            color: var(--accent-color);
+            transform: translateY(-5px);
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+        }
+
+        .bott
